@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Temperature Dashboard</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+    crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            var ws;
+            $("#hum_alarm").val(60);
+            $("#temp_alarm").val(50);
+          
+          $("#connect_link").click(function(evt) {
+                evt.preventDefault();
+                $("#terminal").text("connecting");
+
+                ws = new WebSocket("ws://localhost:8888/ws");
+                
+            // Handle incoming websocket message callback
+                ws.onmessage = function(evt) {
+                const parts = evt.data.split(":");
+                // console.log(parts);
+                if (parts[0] == "single") {
+                    $("#hum_out").text(parts[1]);
+                    $("#temp_out").text(parts[2]);
+                }
+                else if (parts[0] == "multiple") {
+                   var temp_limit = parseFloat($("#temp_alarm").val());
+                   var hum_limit = parseFloat($("#hum_alarm").val());
+                   var hum = parseFloat(parts[1]);
+                   var temp = parseFloat(parts[2]);
+                   
+                   if (hum > hum_limit) {
+                    $("#hum_alarm").css("background", "#f7b305"); 
+                    $("#hum_alarm").val(hum);
+                   };
+                   if (temp > temp_limit) {
+                    $("#temp_alarm").css("background", "#f7b305");
+                    $("#temp_alarm").val(temp);
+                   };
+                   var table = document.getElementById("tbb");
+                   var row = table.insertRow();
+                   var hum_cell = row.insertCell(0);
+                   var temp_cell = row.insertCell(1);
+                   var time_cell = row.insertCell(2);
+                   temp_cell.innerHTML = parts[1] + ' %';
+                   hum_cell.innerHTML = parts[2] + ' °C';
+                   time_cell.innerHTML = parts[3];
+                } 
+                };
+ 
+            // Open websocket
+                ws.onopen = function(evt) { 
+                $("#connect_bar").css("background", "#00ff00"); 
+                $("div#message_details").show();
+                $("#terminal").text("***Connection Opened***");
+                };
+
+            // Close Websocket callback
+                ws.onclose = function(evt) {
+                $("#terminal").text("***Connection Closed***");
+                alert("Connection close");
+                $("#connect_bar").css("background", "#ff0000"); 
+                $("div#message_details").empty();
+
+                };
+
+                // Read single value
+                $("#read_s").click(function(evt) {
+                ws.send("read single value");
+                });
+
+                // Read multiple values
+                $("#read_m").click(function(evt) {
+                ws.send("read multiple values");
+                });
+
+                // Close the UI and the tornado server
+                $("#close").click(function(evt) {
+                console.log("close tornado server");
+                ws.send("close");
+                });
+      
+        });
+        
+        $("#close").click(function(evt) {
+                // ws.send("read multiple values");
+                console.log("close the web page");
+                });
+
+    });
+      </script>
+</head>
+<body>
+    <h1 class="main_title">Humidity and Temperature Dashboard</h1>
+    <div id="connect_bar">
+        <a href="#" id="connect_link"> Connect to the server </a>
+        <div id="terminal">
+        
+        </div>
+        <div id="status">
+        
+        </div>
+    </div>
+    <div id="upper_cont">
+        <div id="left_cont">
+            <div id="single_value_container">
+                <div class="h_box_cont">
+                    <div class="h_box">
+                        <div>Temperature</div>
+                        <div class="value_box" id="temp_out">0.00</div>
+                    </div>
+                    <div class="h_box">
+                        <div>Humidity</div>
+                        <div class="value_box" id="hum_out">0.00</div>
+                    </div>
+                </div>
+                <div>
+                    <input type="button" class="btn" id="read_s" value="read">
+                </div>
+            </div>
+            <div id="alamrs">
+                <h4>Alamrs</h4>
+                <label>Temperature</label>
+                <input type="text" name="Temperature" class="inp_field" id="temp_alarm" value="50">
+                <label>Humidity</label>
+                <input type="text" name="Humidity" class="inp_field" id="hum_alarm" value="60">
+            </div>
+        </div>
+        <!-- ========================== second section ======================== -->
+        <div id="tb_container">
+            <div id="table">
+                <table id="tbb">
+                    <tr>
+                      <th>Temperature</th>
+                      <th>Humidity</th>
+                      <th>Timestamp</th>
+                    </tr>
+                </table> 
+            </div>
+            <div>
+                <input type="button" value="Fill" id="read_m" class="btn">
+            </div>
+        </div>
+    </div>
+    <input type="button" value="Close" class="btn" id="close">
+</body>
+</html>

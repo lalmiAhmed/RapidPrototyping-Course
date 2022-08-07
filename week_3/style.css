@@ -1,0 +1,104 @@
+body{
+    background-color: rgb(245, 245, 245);
+}
+
+.main_title {
+    margin: 10px 30px;
+}
+
+#connect_bar {
+    margin: 20px;
+    padding: 10px 20px;
+    background-color: rgba(181, 201, 219, 0.63);
+    text-align: center;
+    font-size: 18px;
+}
+
+#upper_cont {
+    width: 100%;
+    margin: auto;
+    /* border: 1px yellow solid; */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: flex-start;
+}
+
+#left_cont {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#single_value_container {
+    margin-top: 20px;
+    /* border: 1px black dotted; */
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items: center;
+}
+
+.h_box_cont {
+    /* border: 1px red dotted; */
+    width: 40%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    text-align: center;
+}
+
+.value_box {
+    border: 2px rgb(24, 24, 56) solid;
+    margin: 20px;
+    padding: 10px 20px;
+    text-align: center;
+    border-radius: 4px;
+}
+
+.btn {
+    padding: 10px 20px;
+    margin: 20px;
+    border-radius: 10px;
+    /* border: 0.5px gray solid; */
+}
+
+#alamrs {
+    /* border: 1px red dotted; */
+    margin: 40px 10px;
+    margin-top: 60px;
+}
+
+.inp_field {
+    width: 60px;
+    height: 20px;
+    border: 2px rgb(24, 24, 56) solid;
+    border-radius: 4px;
+}
+
+/* ================================================ */
+
+#table {
+    margin-left: auto;
+    margin-right: auto;
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  #table td, #table th {
+    border: 1px solid rgb(24, 24, 56);
+    padding: 8px;
+  }
+  
+  #table tr:nth-child(even){background-color: #f2f2f2;}
+  
+  #table tr:hover {background-color: #ddd;}
+  
+  #table th {
+    text-align: left;
+    background-color: #19525c;
+    color: white;
+  }
